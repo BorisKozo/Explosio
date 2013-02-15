@@ -1,27 +1,29 @@
-﻿define(["jquery", "jaws", "./../tusk/circle"], function ($, jaws, Circle) {
-    var circle = new Circle({
-        centerX: 100,
-        centerY: 100,
-        radius: 50,
-        fillStyle: "red",
-        strokeStyle: "black",
-        lineWidth: 5
-    });
+﻿define(["jquery", "jaws","./../sprites/pointer", "js/common/sprite_list"], function ($, jaws, Pointer, SpriteList) {
+
 
     var fps = $("#fps");
 
     var Level = function () {
-        this.setup = function () { };
+        this.setup = function () {
+            this.explosions = new SpriteList();
+            this.pointer = new Pointer();
+        };
 
-        this.update = function () { };
+        this.update = function () {
+            this.explosions.update();
+            this.pointer.update();
+        };
 
         this.draw = function () {
-
             jaws.context.clearRect(0, 0, jaws.width, jaws.height);
-            circle.centerX = jaws.mouse_x;
-            circle.centerY = jaws.mouse_y;
-            circle.draw(jaws.context);
-            fps.html(jaws.game_loop.fps);
+
+            this.explosions.draw(jaws.context);
+            this.pointer.draw(jaws.context);
+            
+            //circle.centerX = jaws.mouse_x;
+            //circle.centerY = jaws.mouse_y;
+            //circle.draw(jaws.context);
+            //fps.html(jaws.game_loop.fps);
             //jaws.context.fillStyle = "red";
             //jaws.context.fillRect(0, 0, 300, 150);
             //jaws.context.clearRect(20, 20, 100, 50);
