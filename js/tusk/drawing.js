@@ -1,25 +1,39 @@
 ﻿define([], function () {
 
     var Drawing = function (options) {
-        this.data = [];
-        this.length = 0;
+        this.data = {};
+        this.tempId = 0;
         options = options || {};
         this.x = options.x || 0;
         this.y = options.y || 0;
     };
 
     Drawing.prototype.draw = function (context) {
-        for (var i = 0; i < this.length; i += 1) {
-            this.data[i].draw(context, {
-                dx: this.x,
-                dy: this.y
-            });
+        var itemId;
+        for (itemId in this.data) {
+            if (this.data.hasOwnProperty(itemId)) {
+                this.data[itemId].draw(context, {
+                    dx: this.x,
+                    dy: this.y
+                });
+            }
         }
     };
 
-    Drawing.prototype.add = function (item) {
-        this.data.push(item);
-        this.length += 1;
+    Drawing.prototype.add = function (item, id) {
+        if (!id) {
+            id = "$" + this.tempId + "$";
+            this.tempId += 1;
+        }
+        this.data[id] = item;
+    };
+
+    Drawing.prototype.getById = function (id) {
+        if (id) {
+            return this.data[id];
+        } else {
+            return undefined;
+        }
     };
 
     return Drawing;

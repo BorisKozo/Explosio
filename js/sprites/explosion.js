@@ -1,8 +1,7 @@
-﻿define(['jaws', 'js/tusk/circle'], function (jaws, Circle) {
-    var _setup = function () {
-    };
+﻿define(['jaws', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, Circle, Drawing) {
 
     var _update = function () {
+        var circle;
         if (this.dead) {
             return;
         }
@@ -10,7 +9,10 @@
         if (this.radius >= this.endRadius) {
             this.dead = true;
         }
-        this.drawing.circle.radius = this.radius;
+        circle = this.drawing.getById("circle");
+        circle.radius = this.radius;
+        this.alpha -= this.alphaStep;
+        circle.fillStyle = "rgba(255,0,0," + this.alpha + ")";
     };
 
     var _draw = function (context) {
@@ -18,7 +20,7 @@
             return;
         }
 
-        this.drawing.circle.draw(context);
+        this.drawing.draw(context);
     };
 
     ///
@@ -29,9 +31,7 @@
     /// step : The increase in radius size on each call to update (should be millisecond)
 
     var Explosion = function (options) {
-        this.setup = _setup;
-        this.update = _update;
-        this.draw = _draw;
+        var totalSteps;
         options = options || {};
         this.x = options.x || 0;
         this.y = options.y || 0;
@@ -39,21 +39,24 @@
         this.endRadius = options.endRadius || 0;
         this.step = options.step || 1;
         this.dead = false;
+        totalSteps = (this.endRadius - this.startRadius) / this.step;
+
+        this.alpha = 0.5;
+        this.alphaStep = this.alpha / totalSteps;
 
         this.radius = this.startRadius;
-        this.drawing = {
-            circle: new Circle({
-                centerX: this.x,
-                centerY: this.y,
-                radius: this.radius,
-                fillStyle: "red",
-                strokeStyle: "black",
-                lineWidth: 1
-            })
-        };
-
-
+        this.drawing = new Drawing();
+        this.drawing.add(new Circle({
+            centerX: this.x,
+            centerY: this.y,
+            radius: this.radius,
+            fillStyle: "rgba(255,0,0," + this.alpha + ")"
+        }), "circle");
     };
+
+    Explosion.prototype.type = "explosions";
+    Explosion.prototype.draw = _draw;
+    Explosion.prototype.update = _update;
 
     return Explosion;
 });

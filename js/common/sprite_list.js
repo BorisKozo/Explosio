@@ -4,9 +4,9 @@
         this.data = [];
     };
 
-    SpriteList.prototype.update = function () {
+    SpriteList.prototype.update = function (field) {
         for (var i = 0; i < this.length; i += 1) {
-            this.data[i].update();
+            this.data[i].update(field);
             if (this.data[i].dead) {
                 array_helper.remove(this.data, i);
                 i -= 1;

@@ -1,6 +1,4 @@
 ﻿define(['jaws', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, Circle, Drawing) {
-    var _setup = function () {
-    };
 
     var _update = function () {
         this.drawing.x = jaws.mouse_x;
@@ -11,16 +9,17 @@
         this.drawing.draw(context);
     };
 
-    var Pointer = function (options) {
+    var Pointer = function () {
         this.drawing = new Drawing();
         this.drawing.add(new Circle({
-            radius: 3,
-            fillStyle: "black"
+            radius: 2,
+            fillStyle: "white"
         }));
-
-        this.update = _update;
-        this.draw = _draw;
     };
+
+    Pointer.prototype.draw = _draw;
+    Pointer.prototype.update = _update;
+    Pointer.prototype.type = "pointer";
 
     return Pointer;
 });
