@@ -8,7 +8,7 @@
 
     return {
         remove: function (array, from, to) {
-            _remove.apply(array, from, to);
+            _remove.call(array, from, to);
         }
     }
 });

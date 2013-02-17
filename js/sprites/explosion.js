@@ -21,6 +21,12 @@
         this.drawing.circle.draw(context);
     };
 
+    ///
+    /// x : Explosion center X coordinate
+    /// y : Explosion center Y coordinate
+    /// startRadius : The initial explosion radius
+    /// endRadius : The final (biggest) explosion radius
+    /// step : The increase in radius size on each call to update (should be millisecond)
 
     var Explosion = function (options) {
         this.setup = _setup;

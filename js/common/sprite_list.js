@@ -10,13 +10,14 @@
             if (this.data[i].dead) {
                 array_helper.remove(this.data, i);
                 i -= 1;
+                this.length -= 1;
             }
         }
     };
 
     SpriteList.prototype.draw = function (context) {
         for (var i = 0; i < this.length; i += 1) {
-            this.data[i].draw();
+            this.data[i].draw(context);
         }
     };
 
