@@ -1,13 +1,4 @@
-﻿define(['jaws', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, Circle, Drawing) {
-
-    var _update = function () {
-        this.drawing.x = jaws.mouse_x;
-        this.drawing.y = jaws.mouse_y;
-    };
-
-    var _draw = function (context) {
-        this.drawing.draw(context);
-    };
+﻿define(['jaws', 'lodash', './../common/sprite_base', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, _, spriteBase, Circle, Drawing) {
 
     var Pointer = function () {
         this.drawing = new Drawing();
@@ -16,9 +7,16 @@
             fillStyle: "white"
         }));
     };
+    _.extend(Pointer.prototype, spriteBase);
+    Pointer.prototype.innerDraw = function (context) {
+        this.drawing.draw(context);
+    };
 
-    Pointer.prototype.draw = _draw;
-    Pointer.prototype.update = _update;
+    Pointer.prototype.innerUpdate = function () {
+        this.drawing.x = jaws.mouse_x;
+        this.drawing.y = jaws.mouse_y;
+    };
+
     Pointer.prototype.type = "pointer";
 
     return Pointer;

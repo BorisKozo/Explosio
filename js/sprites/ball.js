@@ -1,7 +1,6 @@
-﻿define(['jaws', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, Circle, Drawing) {
+﻿define(['jaws', 'lodash', './../common/sprite_base', 'js/tusk/circle', 'js/tusk/drawing'], function (jaws, _, spriteBase, Circle, Drawing) {
 
     var _move = function (field) {
-        var circle;
 
         this.x += this.speedX;
         this.y += this.speedY;
@@ -27,23 +26,6 @@
 
         this.drawing.x = this.x;
         this.drawing.y = this.y;
-    }
-
-    var _update = function (field) {
-
-        if (this.dead) {
-            return;
-        }
-
-        _move.call(this, field);
-    };
-
-    var _draw = function (context) {
-        if (this.dead) {
-            return;
-        }
-
-        this.drawing.draw(context);
     };
 
     ///
@@ -51,13 +33,14 @@
     /// y : Ball center Y coordinate
 
     var Ball = function (options) {
+        
         options = options || {};
-        this.x = options.x || 0;
-        this.y = options.y || 0;
+        this.x = options.x || this.x;
+        this.y = options.y || this.y;
         this.speedX = options.speedX || 0;
         this.speedY = options.speedY || 0;
         this.radius = 15;
-        this.dead = false;
+
         this.drawing = new Drawing({
             x: this.x,
             y: this.y
@@ -70,9 +53,17 @@
         }), "circle");
     };
 
+    _.extend(Ball.prototype, spriteBase);
+
     Ball.prototype.type = "ball";
-    Ball.prototype.draw = _draw;
-    Ball.prototype.update = _update;
+  
+    Ball.prototype.innerDraw = function (context) {
+        this.drawing.draw(context);
+    };
+
+    Ball.prototype.innerUpdate =  function (field) {
+        _move.call(this, field);
+    };
 
     return Ball;
 });

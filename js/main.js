@@ -12,8 +12,8 @@ requirejs.config({
     },
     paths: {
         'jquery': 'lib/jquery',
-        'jaws': 'lib/jaws'
-
+        'jaws': 'lib/jaws',
+        'lodash': 'lib/lodash'
     },
     hbs: {
         disableI18n: true
