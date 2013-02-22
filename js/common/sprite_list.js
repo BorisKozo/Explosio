@@ -26,7 +26,16 @@
         this.length += 1;
     };
 
+    SpriteList.prototype.at = function (index) {
+        if (index < 0 || index >= this.length) {
+            return undefined;
+        }
+
+        return this.data[index];
+    };
+
+
     return SpriteList;
 
 
-})
+});

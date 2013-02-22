@@ -39,7 +39,7 @@
         this.y = options.y || this.y;
         this.speedX = options.speedX || 0;
         this.speedY = options.speedY || 0;
-        this.radius = 15;
+        this.radius = options.radius || 15;
 
         this.drawing = new Drawing({
             x: this.x,
