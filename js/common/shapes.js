@@ -23,6 +23,16 @@
         return this.y + this.height;
     };
 
+    /// returns true if the rect fully contains the given point (point cannot be on the bound) 
+    Rect.prototype.contains = function (x, y) {
+        if (x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     Rect.fromBounds = function (left, top, right, bottom) {
         return new Rect({
             x: left,

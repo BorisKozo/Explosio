@@ -4,23 +4,23 @@
 
         this.x += this.speedX;
         this.y += this.speedY;
-        if ((this.x - this.radius) < 0) {
-            this.x = this.radius;
+        if ((this.x - this.radius) < field.left()) {
+            this.x = this.radius + field.left();
             this.speedX = -this.speedX;
         }
 
-        if ((this.x + this.radius) > field.width) {
-            this.x = field.width - this.radius;
+        if ((this.x + this.radius) > field.right()) {
+            this.x = field.right() - this.radius;
             this.speedX = -this.speedX;
         }
 
-        if ((this.y - this.radius) < 0) {
-            this.y = this.radius;
+        if ((this.y - this.radius) < field.top()) {
+            this.y = this.radius+field.top();
             this.speedY = -this.speedY;
         }
 
-        if ((this.y + this.radius) > field.height) {
-            this.y = field.height - this.radius;
+        if ((this.y + this.radius) > field.bottom()) {
+            this.y = field.bottom() - this.radius;
             this.speedY = -this.speedY;
         }
 

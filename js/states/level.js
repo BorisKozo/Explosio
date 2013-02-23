@@ -1,4 +1,6 @@
-﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders", "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer"],
+﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
+    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../tusk/rect", "./../tusk/drawing",
+    "./../common/shapes"],
     function (require, $, jaws) {
         var Ball = require("./../sprites/ball");
         var Explosion = require("./../sprites/explosion");
@@ -6,6 +8,9 @@
         var SpriteList = require("js/common/sprite_list");
         var CollisionManager = require("js/common/collision_manager");
         var colliders = require("js/common/colliders");
+        var Rect = require("./../tusk/rect");
+        var Drawing = require("./../tusk/drawing");
+        var shapes = require("./../common/shapes");
 
 
         var fps = $("#fps");
@@ -33,16 +38,16 @@
         }
 
         function handleCollisions() {
-    
+
             var i, j, lengthExplosions = this.explosions.length, lengthTargets = this.targets.length,
                 explosion, target;
-            
+
             for (i = 0; i < lengthExplosions; i += 1) {
                 for (j = 0; j < lengthTargets; j += 1) {
                     explosion = this.explosions.at(i);
                     target = this.targets.at(j);
                     if (this.collisionManager.areColliding(explosion, target)) {
-                       
+
                         target.dead = true;
                         this.explosions.add(getExplosion(target.x, target.y));
                     }
@@ -63,10 +68,21 @@
                 this.mouseClicks = [];
                 this.collisionManager = new CollisionManager();
                 this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
-                this.field = {
+                this.field = new shapes.Rect({
+                    x: 5,
+                    y: 5,
                     width: 640,
                     height: 480
-                };
+                });
+
+                this.drawing = new Drawing();
+                this.drawing.add(new Rect({
+                    x: 5,
+                    y: 5,
+                    width: 640,
+                    height: 480,
+                    strokeStyle: "Cornsilk"
+                }));
 
                 this.targets.add(new Ball({
                     x: 100,
@@ -76,10 +92,12 @@
                 }));
 
                 jaws.on_keydown("left_mouse_button", function () {
-                    _this.mouseClicks.push({
-                        x: jaws.mouse_x,
-                        y: jaws.mouse_y
-                    });
+                    if (_this.field.contains(jaws.mouse_x, jaws.mouse_y)) {
+                        _this.mouseClicks.push({
+                            x: jaws.mouse_x,
+                            y: jaws.mouse_y
+                        });
+                    }
                 });
             };
 
@@ -94,25 +112,11 @@
             this.draw = function () {
                 fps.html(jaws.game_loop.fps);
                 jaws.clear();
-
+                this.drawing.draw(jaws.context);
                 this.targets.draw(jaws.context);
                 this.explosions.draw(jaws.context);
                 this.pointer.draw(jaws.context);
 
-                // console.log(jaws.pressed("left_mouse_button"));
-                //circle.centerX = jaws.mouse_x;
-                //circle.centerY = jaws.mouse_y;
-                //circle.draw(jaws.context);
-
-                //jaws.context.fillStyle = "red";
-                //jaws.context.fillRect(0, 0, 300, 150);
-                //jaws.context.clearRect(20, 20, 100, 50);
-                //jaws.context.clearRect(0, 0, jaws.width, jaws.height)
-                //jaws.context.font = "bold 50pt terminal";
-                //jaws.context.lineWidth = 10;
-                //jaws.context.fillStyle = "Black";
-                //jaws.context.strokeStyle = "rgba(200,200,200,0.0)";
-                //jaws.context.fillText("Hello World",50,200);
             };
         };
 
