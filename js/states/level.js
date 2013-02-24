@@ -1,5 +1,5 @@
 ﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
-    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../tusk/rect", "./../tusk/drawing",
+    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../tusk/rect", "./../tusk/drawing", "./../tusk/text",
     "./../common/shapes"],
     function (require, $, jaws) {
         var Ball = require("./../sprites/ball");
@@ -9,6 +9,7 @@
         var CollisionManager = require("js/common/collision_manager");
         var colliders = require("js/common/colliders");
         var Rect = require("./../tusk/rect");
+        var Text = require("./../tusk/text");
         var Drawing = require("./../tusk/drawing");
         var shapes = require("./../common/shapes");
 
@@ -83,6 +84,14 @@
                     height: 480,
                     strokeStyle: "Cornsilk"
                 }));
+
+                this.drawing.add(new Text({
+                    x: 5,
+                    y: 490,
+                    text: "Hello World",
+                    font: "24px Arial",
+                    fillStyle: "Cornsilk" 
+                }), "targets label");
 
                 this.targets.add(new Ball({
                     x: 100,
