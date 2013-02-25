@@ -1,9 +1,9 @@
-﻿define(["jaws","./states/level"], function (jaws, Level) {
+﻿define(["jaws", "./states/level", "./level_data/level1", "./level_data/level2"], function (jaws, Level, level1, level2) {
     var loader = {
         start: function () {
-            jaws.start(Level)
+            jaws.start(Level, {}, level2);
 
         }
-    }
+    };
     return loader;
 });

@@ -2,7 +2,10 @@
     "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../tusk/rect", "./../tusk/drawing", "./../tusk/text",
     "./../common/shapes"],
     function (require, $, jaws) {
+        var targetsHash = {};
         var Ball = require("./../sprites/ball");
+        targetsHash[Ball.prototype.type] = Ball; //Should do it in some smarter way
+
         var Explosion = require("./../sprites/explosion");
         var Pointer = require("./../sprites/pointer");
         var SpriteList = require("js/common/sprite_list");
@@ -15,6 +18,33 @@
 
 
         var fps = $("#fps");
+        function generateTargets(field, targets) {
+            var i, length = targets.length, targetData, target, options, Target,
+                result = new SpriteList();
+            for (i = 0; i < length; i += 1) {
+                targetData = targets[i];
+                if (!targetsHash.hasOwnProperty(targetData.type)) {
+                    console.log("Cannot load target of type " + targetData.type + " because it was not registered");
+                    continue;
+                }
+
+                options = {
+                    x: Math.random() * field.width + field.x,
+                    y: Math.random() * field.height + field.y,
+                    speedX: 2 * (Math.random() - 0.5) * 3,
+                    speedY: 2 * (Math.random() - 0.5) * 3
+                };
+
+                Target = targetsHash[targetData.type];
+                options = $.extend(options, targetData.options);
+
+                target = new Target(options);
+                result.add(target);
+            }
+
+            return result;
+        }
+
         function getExplosion(x, y) {
             return new Explosion({
                 x: x,
@@ -61,20 +91,23 @@
             this._addExplosions = addExplosions;
             this._handleCollisions = handleCollisions;
 
-            this.setup = function () {
+            this.setup = function (levelData) {
                 var _this = this;
-                this.explosions = new SpriteList();
-                this.targets = new SpriteList();
-                this.pointer = new Pointer();
-                this.mouseClicks = [];
-                this.collisionManager = new CollisionManager();
-                this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
                 this.field = new shapes.Rect({
                     x: 5,
                     y: 5,
                     width: 640,
                     height: 480
                 });
+
+                this.explosions = new SpriteList();
+                this.targets = generateTargets(this.field, levelData.targets);
+                this.goal = levelData.goal;
+                this.explosionsLeft = levelData.explosions;
+                this.pointer = new Pointer();
+                this.mouseClicks = [];
+                this.collisionManager = new CollisionManager();
+                this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
 
                 this.drawing = new Drawing();
                 this.drawing.add(new Rect({
@@ -88,20 +121,23 @@
                 this.drawing.add(new Text({
                     x: 5,
                     y: 490,
-                    text: "Hello World",
+                    text: "",
                     font: "24px Arial",
-                    fillStyle: "Cornsilk" 
+                    fillStyle: "Cornsilk"
                 }), "targets label");
 
-                this.targets.add(new Ball({
-                    x: 100,
-                    y: 100,
-                    speedX: 0.5,
-                    speedY: 0.7
-                }));
+                this.drawing.add(new Text({
+                    x: this.field.right(),
+                    y: 490,
+                    text: "Test",
+                    textAlign: "right",
+                    font: "24px Arial",
+                    fillStyle: "Cornsilk"
+                }), "explosions label");
 
                 jaws.on_keydown("left_mouse_button", function () {
-                    if (_this.field.contains(jaws.mouse_x, jaws.mouse_y)) {
+                    if (_this.field.contains(jaws.mouse_x, jaws.mouse_y) && _this.explosionsLeft > 0) {
+                        _this.explosionsLeft -= 1;
                         _this.mouseClicks.push({
                             x: jaws.mouse_x,
                             y: jaws.mouse_y
@@ -116,6 +152,10 @@
                 this.pointer.update(this.field);
                 this._addExplosions();
                 this._handleCollisions();
+
+                this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
+                this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
+                
             };
 
             this.draw = function () {
