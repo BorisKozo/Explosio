@@ -1,5 +1,5 @@
 ﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
-    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../tusk/rect", "./../tusk/drawing", "./../tusk/text",
+    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../tusk/rect", "./../tusk/drawing", "./../tusk/text",
     "./../common/shapes"],
     function (require, $, jaws) {
         var targetsHash = {};
@@ -8,6 +8,7 @@
 
         var Explosion = require("./../sprites/explosion");
         var Pointer = require("./../sprites/pointer");
+        var Button = require("./../sprites/button");
         var SpriteList = require("js/common/sprite_list");
         var CollisionManager = require("js/common/collision_manager");
         var colliders = require("js/common/colliders");
@@ -108,6 +109,14 @@
                 this.mouseClicks = [];
                 this.collisionManager = new CollisionManager();
                 this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
+                this.restartButton = new Button({
+                    x: 5,
+                    y: 525,
+                    text: "Restart",
+                    onClick: function () {
+                        jaws.switchGameState(Level, {}, levelData);
+                    }
+                }, jaws.context);
 
                 this.drawing = new Drawing();
                 this.drawing.add(new Rect({
@@ -152,10 +161,11 @@
                 this.pointer.update(this.field);
                 this._addExplosions();
                 this._handleCollisions();
+                this.restartButton.update(this.field);
 
                 this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
                 this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
-                
+
             };
 
             this.draw = function () {
@@ -165,6 +175,7 @@
                 this.targets.draw(jaws.context);
                 this.explosions.draw(jaws.context);
                 this.pointer.draw(jaws.context);
+                this.restartButton.draw(jaws.context);
 
             };
         };

@@ -14,12 +14,13 @@
     };
 
     Rect.prototype.draw = function (context, options) {
+        var dx, dy;
         if (!context) {
             throw new Error("context must be a canvas context. Use canvas.getContext('2d'); to get a context from a canvas element");
         }
         options = options || {};
-        var dx = options.dx || 0,
-            dy = options.dy || 0;
+        dx = options.dx || 0;
+        dy = options.dy || 0;
 
         if (this.fillStyle) {
             context.fillStyle = this.fillStyle;
