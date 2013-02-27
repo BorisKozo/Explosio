@@ -2,7 +2,7 @@
 'use strict';
 
 requirejs.config({
-    baseUrl: '/',
+    baseUrl: '/Explosio',
     waitSeconds: 3000,
     shim: {
         'jaws': {
