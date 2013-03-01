@@ -19,7 +19,7 @@
         totalSteps = (this.endRadius - this.startRadius) / this.step;
 
         this.alpha = 0.5;
-        this.alphaStep = this.alpha / totalSteps;
+        this.alphaStep = 0.3 / totalSteps;
 
         this.radius = this.startRadius;
         this.drawing = new Drawing();
