@@ -87,10 +87,30 @@
             }
         }
 
+        function handleInput() {
+            var pressed = jaws.pressed("left_mouse_button");
+
+            if (!this._leftMouseButtonPressed && pressed && this.field.contains(jaws.mouse_x, jaws.mouse_y)) {
+                if (this.explosionsLeft > 0) {
+                    this.explosionsLeft -= 1;
+                    this.mouseClicks.push({
+                        x: jaws.mouse_x,
+                        y: jaws.mouse_y
+                    });
+
+
+                }
+            }
+            this._leftMouseButtonPressed = pressed;
+
+        }
+
 
         var Level = function () {
             this._addExplosions = addExplosions;
             this._handleCollisions = handleCollisions;
+            this._handleInput = handleInput;
+            this._leftMouseButtonPressed = false;
 
             this.setup = function (levelData) {
                 var _this = this;
@@ -115,7 +135,8 @@
                     text: "Restart",
                     onClick: function () {
                         jaws.switchGameState(Level, {}, levelData);
-                    }
+                    },
+                    shortcut: "r"
                 }, jaws.context);
 
                 this.drawing = new Drawing();
@@ -144,18 +165,11 @@
                     fillStyle: "Cornsilk"
                 }), "explosions label");
 
-                jaws.on_keydown("left_mouse_button", function () {
-                    if (_this.field.contains(jaws.mouse_x, jaws.mouse_y) && _this.explosionsLeft > 0) {
-                        _this.explosionsLeft -= 1;
-                        _this.mouseClicks.push({
-                            x: jaws.mouse_x,
-                            y: jaws.mouse_y
-                        });
-                    }
-                });
+                jaws.on_keydown("left_mouse_button", function () {});
             };
 
             this.update = function () {
+                this._handleInput();
                 this.targets.update(this.field);
                 this.explosions.update(this.field);
                 this.pointer.update(this.field);

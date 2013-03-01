@@ -8,6 +8,10 @@
         this.y = options.y || this.y;
         this.text = options.text || "";
         this.onClick = options.onClick;
+        
+        if (options.shortcut) {
+            jaws.on_keydown(options.shortcut, this.onClick);
+        }
 
         this.drawing = new Drawing();
 
@@ -66,7 +70,6 @@
         }
 
         pressed = jaws.pressed("left_mouse_button");
-        console.log(pressed);
         if (!this.pressed && pressed && this.bbox.contains(jaws.mouse_x, jaws.mouse_y) && this.onClick) {
             this.pressed = pressed;
             this.onClick();
