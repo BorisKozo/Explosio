@@ -107,91 +107,92 @@
 
 
         var Level = function () {
+        };
+
+        Level.prototype.setup = function (levelData) {
+            var _this = this;
             this._addExplosions = addExplosions;
             this._handleCollisions = handleCollisions;
             this._handleInput = handleInput;
             this._leftMouseButtonPressed = false;
 
-            this.setup = function (levelData) {
-                var _this = this;
-                this.field = new shapes.Rect({
-                    x: 5,
-                    y: 5,
-                    width: 640,
-                    height: 480
-                });
+            this.field = new shapes.Rect({
+                x: 5,
+                y: 5,
+                width: 640,
+                height: 480
+            });
 
-                this.explosions = new SpriteList();
-                this.targets = generateTargets(this.field, levelData.targets);
-                this.goal = levelData.goal;
-                this.explosionsLeft = levelData.explosions;
-                this.pointer = new Pointer();
-                this.mouseClicks = [];
-                this.collisionManager = new CollisionManager();
-                this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
-                this.restartButton = new Button({
-                    x: 5,
-                    y: 525,
-                    text: "Restart",
-                    onClick: function () {
-                        jaws.switchGameState(Level, {}, levelData);
-                    },
-                    shortcut: "r"
-                }, jaws.context);
+            this.explosions = new SpriteList();
+            this.targets = generateTargets(this.field, levelData.targets);
+            this.goal = levelData.goal;
+            this.explosionsLeft = levelData.explosions;
+            this.pointer = new Pointer();
+            this.mouseClicks = [];
+            this.collisionManager = new CollisionManager();
+            this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
+            this.restartButton = new Button({
+                x: 5,
+                y: 525,
+                text: "Restart",
+                onClick: function () {
+                    setTimeout(jaws.switchGameState, 0, Level, {}, levelData);
+                },
+                shortcut: "r"
+            }, jaws.context);
 
-                this.drawing = new Drawing();
-                this.drawing.add(new Rect({
-                    x: 5,
-                    y: 5,
-                    width: 640,
-                    height: 480,
-                    strokeStyle: "Cornsilk"
-                }));
+            this.drawing = new Drawing();
+            this.drawing.add(new Rect({
+                x: 5,
+                y: 5,
+                width: 640,
+                height: 480,
+                strokeStyle: "Cornsilk"
+            }));
 
-                this.drawing.add(new Text({
-                    x: 5,
-                    y: 490,
-                    text: "",
-                    font: "24px Arial",
-                    fillStyle: "Cornsilk"
-                }), "targets label");
+            this.drawing.add(new Text({
+                x: 5,
+                y: 490,
+                text: "",
+                font: "24px Arial",
+                fillStyle: "Cornsilk"
+            }), "targets label");
 
-                this.drawing.add(new Text({
-                    x: this.field.right(),
-                    y: 490,
-                    text: "Test",
-                    textAlign: "right",
-                    font: "24px Arial",
-                    fillStyle: "Cornsilk"
-                }), "explosions label");
+            this.drawing.add(new Text({
+                x: this.field.right(),
+                y: 490,
+                text: "Test",
+                textAlign: "right",
+                font: "24px Arial",
+                fillStyle: "Cornsilk"
+            }), "explosions label");
 
-                jaws.on_keydown("left_mouse_button", function () {});
-            };
+            jaws.on_keydown("left_mouse_button", function () { });
+        };
 
-            this.update = function () {
-                this._handleInput();
-                this.targets.update(this.field);
-                this.explosions.update(this.field);
-                this.pointer.update(this.field);
-                this._addExplosions();
-                this._handleCollisions();
-                this.restartButton.update(this.field);
+        Level.prototype.update = function () {
+            this._handleInput();
+            this.targets.update(this.field);
+            this.explosions.update(this.field);
+            this.pointer.update(this.field);
+            this._addExplosions();
+            this._handleCollisions();
+            this.restartButton.update(this.field);
 
-                this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
-                this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
+            this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
+            this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
 
-            };
+        };
 
-            this.draw = function () {
-                fps.html(jaws.game_loop.fps);
-                jaws.clear();
-                this.drawing.draw(jaws.context);
-                this.targets.draw(jaws.context);
-                this.explosions.draw(jaws.context);
-                this.pointer.draw(jaws.context);
-                this.restartButton.draw(jaws.context);
+        Level.prototype.draw = function () {
+            fps.html(jaws.game_loop.fps);
+            jaws.clear();
+            this.drawing.draw(jaws.context);
+            this.targets.draw(jaws.context);
+            this.explosions.draw(jaws.context);
+            this.pointer.draw(jaws.context);
+            this.restartButton.draw(jaws.context);
 
-            };
         };
 
         return Level;
