@@ -1,6 +1,6 @@
 ﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
-    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../tusk/rect", "./../tusk/drawing", "./../tusk/text",
-    "./../common/shapes"],
+    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../sprites/messageDialog", 
+    "./../tusk/rect", "./../tusk/drawing", "./../tusk/text", "./../common/shapes"],
     function (require, $, jaws) {
         var targetsHash = {};
         var Ball = require("./../sprites/ball");
@@ -14,6 +14,7 @@
         var colliders = require("js/common/colliders");
         var Rect = require("./../tusk/rect");
         var Text = require("./../tusk/text");
+        var MessageDialog = require("./../sprites/messageDialog");
         var Drawing = require("./../tusk/drawing");
         var shapes = require("./../common/shapes");
 
@@ -32,8 +33,8 @@
                 options = {
                     x: Math.random() * field.width + field.x,
                     y: Math.random() * field.height + field.y,
-                    speedX: 2 * (Math.random() - 0.5) * 3,
-                    speedY: 2 * (Math.random() - 0.5) * 3
+                    speedX: 2 * (Math.random() - 0.5) * 6,
+                    speedY: 2 * (Math.random() - 0.5) * 6
                 };
 
                 Target = targetsHash[targetData.type];
@@ -51,8 +52,8 @@
                 x: x,
                 y: y,
                 startRadius: 1,
-                endRadius: 40,
-                step: 0.5
+                endRadius: 60,
+                steps: 45
             });
         }
 
@@ -105,42 +106,10 @@
 
         }
 
-
         var Level = function () {
         };
 
-        Level.prototype.setup = function (levelData) {
-            var _this = this;
-            this._addExplosions = addExplosions;
-            this._handleCollisions = handleCollisions;
-            this._handleInput = handleInput;
-            this._leftMouseButtonPressed = false;
-
-            this.field = new shapes.Rect({
-                x: 5,
-                y: 5,
-                width: 640,
-                height: 480
-            });
-
-            this.explosions = new SpriteList();
-            this.targets = generateTargets(this.field, levelData.targets);
-            this.goal = levelData.goal;
-            this.explosionsLeft = levelData.explosions;
-            this.pointer = new Pointer();
-            this.mouseClicks = [];
-            this.collisionManager = new CollisionManager();
-            this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
-            this.restartButton = new Button({
-                x: 5,
-                y: 525,
-                text: "Restart",
-                onClick: function () {
-                    setTimeout(jaws.switchGameState, 0, Level, {}, levelData);
-                },
-                shortcut: "r"
-            }, jaws.context);
-
+        Level.prototype.createDrawing = function () {
             this.drawing = new Drawing();
             this.drawing.add(new Rect({
                 x: 5,
@@ -167,26 +136,97 @@
                 fillStyle: "Cornsilk"
             }), "explosions label");
 
+        };
+
+        Level.prototype.getGameState = function () {
+            if (this.targets.length <= this.goal) {
+                return "win";
+            }
+
+            if (this.explosions.length === 0 && this.explosionsLeft === 0) {
+                return "lose";
+            }
+
+            return "continue";
+        };
+
+        Level.prototype.setup = function (levelData) {
+            this._addExplosions = addExplosions;
+            this._handleCollisions = handleCollisions;
+            this._handleInput = handleInput;
+            this._leftMouseButtonPressed = false;
+
+
+            this.field = new shapes.Rect({
+                x: 5,
+                y: 5,
+                width: 640,
+                height: 480
+            });
+            this.gameState = "continue";
+            this.explosions = new SpriteList();
+            this.targets = generateTargets(this.field, levelData.targets);
+            this.goal = levelData.goal;
+            this.explosionsLeft = levelData.explosions;
+            this.pointer = new Pointer();
+            this.mouseClicks = [];
+            this.collisionManager = new CollisionManager();
+            this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
+            this.restartButton = new Button({
+                x: 5,
+                y: 525,
+                text: "Restart",
+                onClick: function () {
+                    setTimeout(jaws.switchGameState, 0, Level, { fps: 30 }, levelData);
+                },
+                shortcut: "r"
+            }, jaws.context);
+
+            var wonDialogButtons = new SpriteList();
+            this.gameWonDialog = new MessageDialog({
+                x: 100,
+                y: 100,
+                text: "Level complete"
+            }, jaws.context, wonDialogButtons);
+
+            this.createDrawing();
+
             jaws.on_keydown("left_mouse_button", function () { });
         };
 
         Level.prototype.update = function () {
-            this._handleInput();
-            this.targets.update(this.field);
-            this.explosions.update(this.field);
+            this.gameState = this.getGameState();
             this.pointer.update(this.field);
-            this._addExplosions();
-            this._handleCollisions();
-            this.restartButton.update(this.field);
 
             this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
             this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
+
+            if (this.gameState === "win") {
+                this.gameWonDialog.update(this.field);
+                return;
+            }
+
+            if (this.gameState === "lose") {
+                return;
+            }
+
+            this._handleInput();
+            this.targets.update(this.field);
+            this.explosions.update(this.field);
+            
+            this._addExplosions();
+            this._handleCollisions();
+            this.restartButton.update(this.field);
 
         };
 
         Level.prototype.draw = function () {
             fps.html(jaws.game_loop.fps);
             jaws.clear();
+            if (this.gameState === "win") {
+                this.gameWonDialog.draw(jaws.context);
+            }
+
             this.drawing.draw(jaws.context);
             this.targets.draw(jaws.context);
             this.explosions.draw(jaws.context);

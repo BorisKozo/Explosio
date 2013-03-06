@@ -61,6 +61,6 @@
 
         ],
         explosions: 2,
-        goal: 4
+        goal: 8
     };
 });
