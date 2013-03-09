@@ -62,8 +62,8 @@
             pressed;
 
         if (this.bbox.contains(jaws.mouse_x, jaws.mouse_y)) {
-            text.fillStyle = "Cyan";
-            border.strokeStyle = "Cyan";
+            text.fillStyle = "BlueViolet";
+            border.strokeStyle = "BlueViolet";
         } else {
             text.fillStyle = "Cornsilk";
             border.strokeStyle = "Cornsilk";

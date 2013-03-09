@@ -13,18 +13,14 @@
         }
     };
 
-    Circle.prototype.draw = function (context, options) {
+    Circle.prototype.draw = function (context) {
         var dx, dy;
         if (!context) {
             throw new Error("context must be a canvas context. Use canvas.getContext('2d'); to get a context from a canvas element");
         }
-        options = options || {};
-        dx = options.dx || 0;
-        dy = options.dy || 0;
-
 
         context.beginPath();
-        context.arc(this.centerX + dx, this.centerY + dy, this.radius, 0, twoPi, false);
+        context.arc(this.centerX, this.centerY, this.radius, 0, twoPi, false);
 
         if (this.fillStyle) {
             context.fillStyle = this.fillStyle;

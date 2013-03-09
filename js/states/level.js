@@ -186,8 +186,9 @@
             this.gameWonDialog = new MessageDialog({
                 x: 100,
                 y: 100,
-                text: "Level complete"
-            }, jaws.context, wonDialogButtons);
+                text: "Level complete",
+                align: "center"
+            }, jaws.context, wonDialogButtons,this.field);
 
             this.createDrawing();
 
@@ -223,15 +224,16 @@
         Level.prototype.draw = function () {
             fps.html(jaws.game_loop.fps);
             jaws.clear();
+            this.drawing.draw(jaws.context);
+            this.targets.draw(jaws.context);
+            this.explosions.draw(jaws.context);
+            this.restartButton.draw(jaws.context);
+
             if (this.gameState === "win") {
                 this.gameWonDialog.draw(jaws.context);
             }
 
-            this.drawing.draw(jaws.context);
-            this.targets.draw(jaws.context);
-            this.explosions.draw(jaws.context);
             this.pointer.draw(jaws.context);
-            this.restartButton.draw(jaws.context);
 
         };
 
