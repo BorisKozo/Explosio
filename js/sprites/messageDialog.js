@@ -1,12 +1,11 @@
 ﻿define(['jaws', 'lodash', './../common/sprite_base', './../common/shapes', 'js/tusk/drawing', 'js/tusk/round_rect', 'js/tusk/text'], function (jaws, _, spriteBase, shapes, Drawing, RoundRect, Text) {
 
     var MessageDialog = function (options, context, buttons, field) {
-
         options = options || {};
         this.x = options.x || this.x;
         this.y = options.y || this.y;
         this.align = options.align;
-        this.height = 100;
+        this.height = options.height || 120;
         this.buttons = buttons;
 
         this.setText(options.text || "", context, field);
@@ -20,6 +19,14 @@
         this.drawing.draw(context);
         this.buttons.draw(context);
     };
+
+    MessageDialog.prototype.alignButtons = function () {
+        var i, button;
+        for (i = 0; i < this.buttons.length; i++){
+            button = this.buttons.at(i);
+            button.moveTo(button.rx + this.x, button.ry+this.y);
+        }
+    }
 
     MessageDialog.prototype.innerUpdate = function (field) {
         this.buttons.update(field);
@@ -51,7 +58,7 @@
             width: this.width,
             radius: 4,
             strokeStyle: "Cornsilk",
-            fillStyle: "rgba(255,248,220,0.9)"
+            fillStyle: "rgba(220,220,255,0.9)"
         }), "border");
 
         this.drawing.add(textElement, "text");
@@ -62,6 +69,8 @@
                 this.drawing.x = this.x;
             }
         }
+
+        this.alignButtons();
 
     };
 

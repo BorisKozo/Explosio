@@ -1,7 +1,7 @@
-﻿define(["require", "jquery", "jaws", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
+﻿define(["require", "jquery", "jaws","js/level_swapper", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
     "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../sprites/messageDialog", 
     "./../tusk/rect", "./../tusk/drawing", "./../tusk/text", "./../common/shapes"],
-    function (require, $, jaws) {
+    function (require, $, jaws, levelSwapper) {
         var targetsHash = {};
         var Ball = require("./../sprites/ball");
         targetsHash[Ball.prototype.type] = Ball; //Should do it in some smarter way
@@ -138,8 +138,28 @@
 
         };
 
+        Level.prototype.createWinDialog = function () {
+            var wonDialogButtons = new SpriteList();
+            var level = this;
+            wonDialogButtons.add(new Button({
+                rx: 5,
+                ry: 85,
+                text: "Retry",
+                onClick: function () {
+                    setTimeout(levelSwapper.startLevel, 0, Level, level.levelData.name);
+                }
+            }, jaws.context));
+            level.gameWonDialog = new MessageDialog({
+                x: 100,
+                y: 100,
+                height:120,
+                text: "Level complete",
+                align: "center"
+            }, jaws.context, wonDialogButtons, level.field);
+        };
+
         Level.prototype.getGameState = function () {
-            if (this.targets.length <= this.goal) {
+            if (this.targets.length <= this.levelData.goal) {
                 return "win";
             }
 
@@ -151,46 +171,41 @@
         };
 
         Level.prototype.setup = function (levelData) {
-            this._addExplosions = addExplosions;
-            this._handleCollisions = handleCollisions;
-            this._handleInput = handleInput;
-            this._leftMouseButtonPressed = false;
+            var level = this;
+            level._addExplosions = addExplosions;
+            level._handleCollisions = handleCollisions;
+            level._handleInput = handleInput;
+            level._leftMouseButtonPressed = jaws.pressed("left_mouse_button");
 
 
-            this.field = new shapes.Rect({
+            level.field = new shapes.Rect({
                 x: 5,
                 y: 5,
                 width: 640,
                 height: 480
             });
-            this.gameState = "continue";
-            this.explosions = new SpriteList();
-            this.targets = generateTargets(this.field, levelData.targets);
-            this.goal = levelData.goal;
-            this.explosionsLeft = levelData.explosions;
-            this.pointer = new Pointer();
-            this.mouseClicks = [];
-            this.collisionManager = new CollisionManager();
-            this.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
-            this.restartButton = new Button({
+            level.gameState = "continue";
+            level.levelData = levelData;
+            level.explosions = new SpriteList();
+            level.targets = generateTargets(level.field, level.levelData.targets);
+            level.explosionsLeft = level.levelData.explosions;
+            level.pointer = new Pointer();
+            level.mouseClicks = [];
+            level.collisionManager = new CollisionManager();
+            level.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
+            level.restartButton = new Button({
                 x: 5,
                 y: 525,
                 text: "Restart",
                 onClick: function () {
-                    setTimeout(jaws.switchGameState, 0, Level, { fps: 30 }, levelData);
+                    setTimeout(levelSwapper.startLevel, 0, Level, level.levelData.name);
                 },
                 shortcut: "r"
             }, jaws.context);
 
-            var wonDialogButtons = new SpriteList();
-            this.gameWonDialog = new MessageDialog({
-                x: 100,
-                y: 100,
-                text: "Level complete",
-                align: "center"
-            }, jaws.context, wonDialogButtons,this.field);
+            level.createWinDialog();
 
-            this.createDrawing();
+            level.createDrawing();
 
             jaws.on_keydown("left_mouse_button", function () { });
         };
@@ -199,7 +214,7 @@
             this.gameState = this.getGameState();
             this.pointer.update(this.field);
 
-            this.drawing.getById("targets label").text = this.targets.length + "/" + this.goal + " targets";
+            this.drawing.getById("targets label").text = this.targets.length + "/" + this.levelData.goal + " targets";
             this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
 
             if (this.gameState === "win") {

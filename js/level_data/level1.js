@@ -1,6 +1,7 @@
 ﻿define([], function () {
 
     return {
+        name:"level 1",
         targets: [
             {
                 type: "ball",

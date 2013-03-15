@@ -4,8 +4,12 @@
         var text, textWidth;
 
         options = options || {};
+        
         this.x = options.x || this.x;
         this.y = options.y || this.y;
+        this.rx = options.rx || 0;
+        this.ry = options.ry || 0;
+
         this.text = options.text || "";
         this.onClick = options.onClick;
         
@@ -13,24 +17,27 @@
             jaws.on_keydown(options.shortcut, this.onClick);
         }
 
-        this.drawing = new Drawing();
+        this.drawing = new Drawing({
+            x: this.x,
+            y: this.y
+        });
 
         text = new Text({
-            x: this.x + 6,
-            y: this.y + 2,
+            x: 6,
+            y: 2,
             text: this.text,
             font: "24px Arial"
         });
 
         textWidth = text.measureText(context);
-        this.height = 28;
+        this.height = 30;
         this.width = textWidth + 12;
 
         this.drawing.add(text, "text");
 
         this.drawing.add(new RoundRect({
-            x: this.x,
-            y: this.y,
+            x: 0,
+            y: 0,
             height: this.height,
             width: this.width,
             radius: 4
@@ -77,6 +84,11 @@
         this.pressed = pressed;
 
     };
+
+    Button.prototype.innerMoveTo = function () {
+        this.drawing.x = this.x;
+        this.drawing.y = this.y;
+    }
 
     return Button;
 });
