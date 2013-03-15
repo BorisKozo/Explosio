@@ -21,7 +21,7 @@
 
         var fps = $("#fps");
         function generateTargets(field, targets) {
-            var i, length = targets.length, targetData, target, options, Target,
+            var i, length = targets.length, targetData, target, options, Target, randomNumber
                 result = new SpriteList();
             for (i = 0; i < length; i += 1) {
                 targetData = targets[i];
@@ -29,12 +29,13 @@
                     console.log("Cannot load target of type " + targetData.type + " because it was not registered");
                     continue;
                 }
+                randomNumber = Math.random();
 
                 options = {
                     x: Math.random() * field.width + field.x,
                     y: Math.random() * field.height + field.y,
-                    speedX: 2 * (Math.random() - 0.5) * 6,
-                    speedY: 2 * (Math.random() - 0.5) * 6
+                    speedX: Math.sin(Math.PI * 2 * randomNumber) * 5,
+                    speedY: Math.cos(Math.PI * 2 * randomNumber) * 5,
                 };
 
                 Target = targetsHash[targetData.type];
