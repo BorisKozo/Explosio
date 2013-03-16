@@ -14,7 +14,9 @@
         this.onClick = options.onClick;
         
         if (options.shortcut) {
-            jaws.on_keydown(options.shortcut, this.onClick);
+            this.shortcut = options.shortcut;
+            this.shortcutPressed = jaws.pressed(this.shortcut);
+            //jaws.on_keydown(options.shortcut, this.onClick);
         }
 
         this.drawing = new Drawing({
@@ -80,15 +82,25 @@
         if (!this.pressed && pressed && this.bbox.contains(jaws.mouse_x, jaws.mouse_y) && this.onClick) {
             this.pressed = pressed;
             this.onClick();
+            return;
         }
         this.pressed = pressed;
 
+        if (this.shortcut) {
+            pressed = jaws.pressed(this.shortcut);
+            if (!this.shortcutPressed && pressed && this.onClick) {
+                this.shortcutPressed = pressed;
+                this.onClick();
+                return;
+            }
+            this.shortcutPressed = pressed;
+        }
     };
 
     Button.prototype.innerMoveTo = function () {
         this.drawing.x = this.x;
         this.drawing.y = this.y;
-    }
+    };
 
     return Button;
 });

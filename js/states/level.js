@@ -1,5 +1,5 @@
-﻿define(["require", "jquery", "jaws","js/level_swapper", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
-    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../sprites/messageDialog", 
+﻿define(["require", "jquery", "jaws", "js/level_swapper", "js/common/sprite_list", "js/common/collision_manager", "js/common/colliders",
+    "./../sprites/explosion", "./../sprites/ball", "./../sprites/pointer", "./../sprites/button", "./../sprites/messageDialog",
     "./../tusk/rect", "./../tusk/drawing", "./../tusk/text", "./../common/shapes"],
     function (require, $, jaws, levelSwapper) {
         var targetsHash = {};
@@ -21,28 +21,32 @@
 
         var fps = $("#fps");
         function generateTargets(field, targets) {
-            var i, length = targets.length, targetData, target, options, Target, randomNumber
-                result = new SpriteList();
+            var i, j, length = targets.length, targetData, target, options, Target, randomNumber,
+                result = new SpriteList(), count;
             for (i = 0; i < length; i += 1) {
                 targetData = targets[i];
                 if (!targetsHash.hasOwnProperty(targetData.type)) {
                     console.log("Cannot load target of type " + targetData.type + " because it was not registered");
                     continue;
                 }
-                randomNumber = Math.random();
 
-                options = {
-                    x: Math.random() * field.width + field.x,
-                    y: Math.random() * field.height + field.y,
-                    speedX: Math.sin(Math.PI * 2 * randomNumber) * 5,
-                    speedY: Math.cos(Math.PI * 2 * randomNumber) * 5,
-                };
+                count = targetData.count || 1;
+                for (j = 0; j < count; j += 1) {
+                    randomNumber = Math.random();
 
-                Target = targetsHash[targetData.type];
-                options = $.extend(options, targetData.options);
+                    options = {
+                        x: Math.random() * field.width + field.x,
+                        y: Math.random() * field.height + field.y,
+                        speedX: Math.sin(Math.PI * 2 * randomNumber) * 5,
+                        speedY: Math.cos(Math.PI * 2 * randomNumber) * 5
+                    };
 
-                target = new Target(options);
-                result.add(target);
+                    Target = targetsHash[targetData.type];
+                    options = $.extend(options, targetData.options);
+
+                    target = new Target(options);
+                    result.add(target);
+                }
             }
 
             return result;
@@ -150,10 +154,23 @@
                     setTimeout(levelSwapper.startLevel, 0, Level, level.levelData.name);
                 }
             }, jaws.context));
+
+            if (!levelSwapper.isLastLevel(level.levelData.name)) {
+                wonDialogButtons.add(new Button({
+                    rx: 290,
+                    ry: 85,
+                    text: "Next level",
+                    onClick: function () {
+                        setTimeout(levelSwapper.nextLevel, 0, Level, level.levelData.name);
+                    }
+                }, jaws.context));
+
+            }
+
             level.gameWonDialog = new MessageDialog({
                 x: 100,
                 y: 100,
-                height:120,
+                height: 120,
                 text: "Level complete",
                 align: "center"
             }, jaws.context, wonDialogButtons, level.field);
@@ -230,7 +247,7 @@
             this._handleInput();
             this.targets.update(this.field);
             this.explosions.update(this.field);
-            
+
             this._addExplosions();
             this._handleCollisions();
             this.restartButton.update(this.field);

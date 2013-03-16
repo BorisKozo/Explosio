@@ -1,12 +1,13 @@
-﻿define(["require","jaws","./level_data/level1","./level_data/level2"], function (require,jaws) {
+﻿define(["require", "jaws", "./level_data/level1", "./level_data/level2", "./level_data/level3"], function (require, jaws) {
     var levels = [];
     levels.push(require("./level_data/level1"));
     levels.push(require("./level_data/level2"));
+    levels.push(require("./level_data/level3"));
     function _getLevelData(levelId) {
         var i, length = swapper.levels.length;
         if (typeof (levelId) === "number") {
             if (levelId >= 0 && levelId < length) {
-                return { levelData: swapper.levels[level], index: levelId };
+                return { levelData: swapper.levels[levelId], index: levelId };
             }
         } else {
             for (i = 0; i < length; i += 1) {
@@ -17,11 +18,11 @@
         }
 
         return null;
-    };
+    }
 
     function _startLevel(Level, levelData) {
         jaws.switchGameState(Level, { fps: 30 }, levelData);
-    };
+    }
 
     var swapper = {
         levels: levels,
@@ -32,8 +33,8 @@
                 _startLevel(Level, result);
             }
         },
-        nextLevel: function (Level, currentLevel) {
-            var result = _getLevelData(currentLevel.name), nextLevel;
+        nextLevel: function (Level, levelName) {
+            var result = _getLevelData(levelName), nextLevel;
             if (result) {
                 nextLevel = _getLevelData(result.index + 1);
                 if (nextLevel) {
@@ -41,8 +42,8 @@
                 }
             }
         },
-        isLastLevel: function (currentLevel) {
-            var result = _getLevelData(currentLevel.name), nextLevel;
+        isLastLevel: function (levelName) {
+            var result = _getLevelData(levelName), nextLevel;
             if (result) {
                 nextLevel = _getLevelData(result.index + 1);
                 if (nextLevel) {
@@ -52,7 +53,7 @@
                 }
             }
         }
-    }
+    };
 
     return swapper;
 });
