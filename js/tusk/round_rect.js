@@ -14,14 +14,14 @@
         }
     };
 
-    RoundRect.prototype.draw = function (context, options) {
+    RoundRect.prototype.draw = function (context) {
         var x, y, radius, width, height;
         if (!context) {
             throw new Error("context must be a canvas context. Use canvas.getContext('2d'); to get a context from a canvas element");
         }
 
-        x = this.x + (options.dx || 0)
-        y = this.y + (options.dy || 0);
+        x = this.x;
+        y = this.y;
         radius = this.radius;
         width = this.width;
         height = this.height;

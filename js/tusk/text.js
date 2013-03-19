@@ -16,14 +16,11 @@
         }
     };
 
-    Text.prototype.draw = function (context, options) {
-        var dx, dy;
+    Text.prototype.draw = function (context) {
+
         if (!context) {
             throw new Error("context must be a canvas context. Use canvas.getContext('2d'); to get a context from a canvas element");
         }
-        options = options || {};
-        dx = options.dx || 0;
-        dy = options.dy || 0;
 
         context.font = this.font;
         context.textAlign = this.textAlign;
@@ -31,13 +28,13 @@
 
         if (this.fillStyle) {
             context.fillStyle = this.fillStyle;
-            context.fillText(this.text, this.x + dx, this.y + dy);
+            context.fillText(this.text, this.x, this.y);
         }
 
         if (this.strokeStyle) {
             context.lineWidth = this.lineWidth;
             context.strokeStyle = this.strokeStyle;
-            context.strokeText(this.text, this.x + dx, this.y + dy);
+            context.strokeText(this.text, this.x, this.y);
         }
     };
 

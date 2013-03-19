@@ -1,7 +1,8 @@
-﻿define(["jaws", "./states/level", "./level_data/level1", "./level_data/level2"], function (jaws, Level, level1, level2) {
+﻿define(["jaws", "./states/level", "./states/level_select"], function (jaws, Level, LevelSelect) {
     var loader = {
         start: function () {
-            jaws.start(Level, {}, level2);
+            //jaws.start(Level, { fps: 30 }, level2);
+            jaws.start(LevelSelect, { fps: 30 });
 
         }
     };

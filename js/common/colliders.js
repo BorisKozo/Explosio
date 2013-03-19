@@ -3,7 +3,7 @@
     //* Returns true if the two objects collide and false otherwise *
     var _circleCircleCollider = {
         test: function (circle1, circle2) {
-            return math.distance(circle1.x, circle1.y, circle2.x, circle2.y) < (circle1.radius + circle2.radius);
+            return math.withinDistance(circle1.x, circle1.y, circle2.x, circle2.y, circle1.radius + circle2.radius);
         },
         symetric: true
     };

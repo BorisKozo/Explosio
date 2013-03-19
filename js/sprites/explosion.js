@@ -5,21 +5,20 @@
     /// y : Explosion center Y coordinate
     /// startRadius : The initial explosion radius
     /// endRadius : The final (biggest) explosion radius
-    /// step : The increase in radius size on each call to update (should be millisecond)
+    /// steps : the number of updates to reach from start to end radius
 
     var Explosion = function (options) {
-        var totalSteps;
         options = options || {};
         this.x = options.x || this.x;
         this.y = options.y || this.x;
         this.startRadius = options.startRadius || 0;
         this.endRadius = options.endRadius || 0;
-        this.step = options.step || 1;
+        this.steps = options.steps || 3;
 
-        totalSteps = (this.endRadius - this.startRadius) / this.step;
+        this.step = (this.endRadius - this.startRadius) / this.steps;
 
         this.alpha = 0.5;
-        this.alphaStep = 0.3 / totalSteps;
+        this.alphaStep = 0.3 / this.steps;
 
         this.radius = this.startRadius;
         this.drawing = new Drawing();
