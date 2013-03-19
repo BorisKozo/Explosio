@@ -3,6 +3,7 @@
     levels.push(require("./level_data/level1"));
     levels.push(require("./level_data/level2"));
     levels.push(require("./level_data/level3"));
+
     function _getLevelData(levelId) {
         var i, length = swapper.levels.length;
         if (typeof (levelId) === "number") {

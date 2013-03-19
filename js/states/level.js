@@ -240,6 +240,8 @@
                 return;
             }
 
+            this.restartButton.update(this.field);
+
             if (this.gameState === "lose") {
                 return;
             }
@@ -250,7 +252,7 @@
 
             this._addExplosions();
             this._handleCollisions();
-            this.restartButton.update(this.field);
+            
 
         };
 

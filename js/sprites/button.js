@@ -9,6 +9,7 @@
         this.y = options.y || this.y;
         this.rx = options.rx || 0;
         this.ry = options.ry || 0;
+        this.minWidth = options.minWidth;
 
         this.text = options.text || "";
         this.onClick = options.onClick;
@@ -34,6 +35,9 @@
         textWidth = text.measureText(context);
         this.height = 30;
         this.width = textWidth + 12;
+        if (this.minWidth) {
+            this.width = Math.max(this.minWidth, this.width);
+        }
 
         this.drawing.add(text, "text");
 
