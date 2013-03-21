@@ -74,6 +74,8 @@
         this.levelButtons.update(this.field);
     };
 
+    LevelSelect.stateName = "LevelSelect";
+
     return LevelSelect;
 
 });

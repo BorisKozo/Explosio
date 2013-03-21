@@ -155,6 +155,16 @@
                 }
             }, jaws.context));
 
+            wonDialogButtons.add(new Button({
+                rx: 145,
+                ry: 85,
+                text: "Menu",
+                onClick: function () {
+                    setTimeout(Level.stateManager.changeState, 0, "LevelSelect");
+                }
+            }, jaws.context));
+
+
             if (!levelSwapper.isLastLevel(level.levelData.name)) {
                 wonDialogButtons.add(new Button({
                     rx: 290,
@@ -271,6 +281,8 @@
             this.pointer.draw(jaws.context);
 
         };
+
+        Level.stateName = "Level";
 
         return Level;
     });

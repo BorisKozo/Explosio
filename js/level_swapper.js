@@ -1,4 +1,4 @@
-﻿define(["require", "jaws", "./level_data/level1", "./level_data/level2", "./level_data/level3"], function (require, jaws) {
+﻿define(["require", "jaws", "./state_options", "./level_data/level1", "./level_data/level2", "./level_data/level3"], function (require, jaws, stateOptions) {
     var levels = [];
     levels.push(require("./level_data/level1"));
     levels.push(require("./level_data/level2"));
@@ -22,7 +22,7 @@
     }
 
     function _startLevel(Level, levelData) {
-        jaws.switchGameState(Level, { fps: 30 }, levelData);
+        jaws.switchGameState(Level, stateOptions, levelData);
     }
 
     var swapper = {
