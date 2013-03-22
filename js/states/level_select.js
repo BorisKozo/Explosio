@@ -1,4 +1,4 @@
-﻿define(["require", "jquery", "jaws", "js/level_swapper", "./../sprites/button", "./../common/sprite_list", "./../common/shapes", "./../sprites/pointer", "./../tusk/drawing", "./../tusk/text", "./level"], function (require, $, jaws) {
+﻿define(["require", "jquery", "jaws", "js/level_swapper", "./../sprites/button", "./../common/sprite_list", "./../common/shapes", "./../sprites/pointer", "./../tusk/drawing", "./../tusk/text","./../tusk/rect", "./level"], function (require, $, jaws) {
     var levelSwapper = require("js/level_swapper");
     var Button = require("./../sprites/button");
     var SpriteList = require("./../common/sprite_list");
@@ -7,6 +7,7 @@
 
     var Drawing = require("./../tusk/drawing")
     var Text = require("./../tusk/text");
+    var Rect = require("./../tusk/rect");
 
     var Level = require("./level");
 
@@ -35,7 +36,15 @@
             text: "Select Level",
             fillStyle: "Cornsilk",
             font: "54px Arial"
-        }),"title");
+        }), "title");
+
+        this.drawing.add(new Rect({
+            x: 5,
+            y: 5,
+            width: 640,
+            height: 550,
+            strokeStyle: "Cornsilk"
+        }), "border");
 
         this.levelButtons = new SpriteList();
 
