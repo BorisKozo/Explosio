@@ -1,4 +1,4 @@
-﻿define(["require","jaws", "./state_options", "./states/level", "./states/level_select"], function (require, jaws, stateOptions) {
+﻿define(["require", "jaws", "./state_options", "./states/level", "./states/level_select", "./states/intro"], function (require, jaws, stateOptions) {
 
     function setState(State) {
         stateManager.states[State.stateName] = State;
@@ -7,11 +7,12 @@
 
     var Level = require("./states/level");
     var LevelSelect = require("./states/level_select");
+    var Intro = require("./states/intro");
 
     var stateManager = {
         states:{},
         start: function () {
-            jaws.start(LevelSelect, stateOptions);
+            jaws.start(Intro, stateOptions);
         },
         changeState: function (stateName) {
             if (stateName && stateManager.states[stateName]) {
@@ -21,6 +22,7 @@
     };
     setState(Level);
     setState(LevelSelect);
+    setState(Intro);
 
     return stateManager;
 });
