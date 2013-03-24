@@ -21,7 +21,7 @@ requirejs.config({
 });
 
 require([
-    'js/loader'
-], function (loader) {
-    loader.start();
+    'js/state_manager'
+], function (stateManager) {
+    stateManager.start();
 });

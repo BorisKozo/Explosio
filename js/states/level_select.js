@@ -1,4 +1,5 @@
-﻿define(["require", "jquery", "jaws", "js/level_swapper", "./../sprites/button", "./../common/sprite_list", "./../common/shapes", "./../sprites/pointer", "./../tusk/drawing", "./../tusk/text", "./level"], function (require, $, jaws) {
+﻿define(["require", "jquery", "jaws", "js/level_swapper", "./../sprites/button", "./../common/sprite_list", "./../common/shapes", "./../sprites/pointer", "./../tusk/drawing", "./../tusk/text","./../tusk/rect", "./level"], function (require, $, jaws) {
+    
     var levelSwapper = require("js/level_swapper");
     var Button = require("./../sprites/button");
     var SpriteList = require("./../common/sprite_list");
@@ -7,6 +8,7 @@
 
     var Drawing = require("./../tusk/drawing")
     var Text = require("./../tusk/text");
+    var Rect = require("./../tusk/rect");
 
     var Level = require("./level");
 
@@ -18,7 +20,7 @@
 
     LevelSelect.prototype.setup = function () {
         var count = levelSwapper.levels.length;
-        var i, j, currentButton = 0, perLine = 2;
+        var i, j, currentButton = 0, perLine = 4;
 
         this.pointer = new Pointer();
         this.field = new shapes.Rect({
@@ -35,7 +37,15 @@
             text: "Select Level",
             fillStyle: "Cornsilk",
             font: "54px Arial"
-        }),"title");
+        }), "title");
+
+        this.drawing.add(new Rect({
+            x: 5,
+            y: 5,
+            width: 640,
+            height: 550,
+            strokeStyle: "Cornsilk"
+        }), "border");
 
         this.levelButtons = new SpriteList();
 
@@ -56,6 +66,16 @@
                 currentButton += 1;
             }
         }
+
+        this.titleButton = new Button({
+            x: 10,
+            y: 520,
+            minWidth: 100,
+            text: "Title screen",
+            onClick: function () {
+                LevelSelect.stateManager.changeState("Intro");
+            }
+        }, jaws.context);
     };
 
     LevelSelect.prototype.draw = function () {
@@ -64,6 +84,7 @@
 
         this.drawing.draw(jaws.context);
         this.levelButtons.draw(jaws.context);
+        this.titleButton.draw(jaws.context);
         
         this.pointer.draw(jaws.context);
 
@@ -72,7 +93,10 @@
     LevelSelect.prototype.update = function () {
         this.pointer.update(this.field);
         this.levelButtons.update(this.field);
+        this.titleButton.update(jaws.context);
     };
+
+    LevelSelect.stateName = "LevelSelect";
 
     return LevelSelect;
 

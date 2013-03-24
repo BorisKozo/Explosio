@@ -155,6 +155,16 @@
                 }
             }, jaws.context));
 
+            wonDialogButtons.add(new Button({
+                rx: 145,
+                ry: 85,
+                text: "Menu",
+                onClick: function () {
+                    setTimeout(Level.stateManager.changeState, 0, "LevelSelect");
+                }
+            }, jaws.context));
+
+
             if (!levelSwapper.isLastLevel(level.levelData.name)) {
                 wonDialogButtons.add(new Button({
                     rx: 290,
@@ -174,6 +184,37 @@
                 text: "Level complete",
                 align: "center"
             }, jaws.context, wonDialogButtons, level.field);
+        };
+
+        Level.prototype.createLostDialog = function () {
+            var lostDialogButtons = new SpriteList();
+            var level = this;
+            lostDialogButtons.add(new Button({
+                rx: 5,
+                ry: 85,
+                text: "Retry",
+                onClick: function () {
+                    setTimeout(levelSwapper.startLevel, 0, Level, level.levelData.name);
+                }
+            }, jaws.context));
+
+            lostDialogButtons.add(new Button({
+                rx: 235,
+                ry: 85,
+                text: "Menu",
+                onClick: function () {
+                    setTimeout(Level.stateManager.changeState, 0, "LevelSelect");
+                }
+            }, jaws.context));
+
+
+            level.gameLostDialog = new MessageDialog({
+                x: 100,
+                y: 100,
+                height: 120,
+                text: "Level failed",
+                align: "center"
+            }, jaws.context, lostDialogButtons, level.field);
         };
 
         Level.prototype.getGameState = function () {
@@ -211,7 +252,8 @@
             level.mouseClicks = [];
             level.collisionManager = new CollisionManager();
             level.collisionManager.register(Ball.prototype.type, Explosion.prototype.type, colliders.circleCircle);
-            level.restartButton = new Button({
+            level.buttons = new SpriteList();
+            level.buttons.add(new Button({
                 x: 5,
                 y: 525,
                 text: "Restart",
@@ -219,9 +261,20 @@
                     setTimeout(levelSwapper.startLevel, 0, Level, level.levelData.name);
                 },
                 shortcut: "r"
-            }, jaws.context);
+            }, jaws.context));
+
+            level.buttons.add(new Button({
+                x: 570,
+                y: 525,
+                text: "Menu",
+                onClick: function () {
+                    setTimeout(Level.stateManager.changeState, 0, "LevelSelect");
+                },
+                shortcut: "m"
+            }, jaws.context));
 
             level.createWinDialog();
+            level.createLostDialog();
 
             level.createDrawing();
 
@@ -239,13 +292,13 @@
                 this.gameWonDialog.update(this.field);
                 return;
             }
-
-            this.restartButton.update(this.field);
-
+            
             if (this.gameState === "lose") {
+                this.gameLostDialog.update(this.field);
                 return;
             }
 
+            this.buttons.update(this.field);
             this._handleInput();
             this.targets.update(this.field);
             this.explosions.update(this.field);
@@ -262,15 +315,21 @@
             this.drawing.draw(jaws.context);
             this.targets.draw(jaws.context);
             this.explosions.draw(jaws.context);
-            this.restartButton.draw(jaws.context);
+            this.buttons.draw(jaws.context);
 
             if (this.gameState === "win") {
                 this.gameWonDialog.draw(jaws.context);
             }
 
+            if (this.gameState === "lose") {
+                this.gameLostDialog.draw(jaws.context);
+            }
+
             this.pointer.draw(jaws.context);
 
         };
+
+        Level.stateName = "Level";
 
         return Level;
     });

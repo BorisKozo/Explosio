@@ -1,17 +1,17 @@
 ﻿define([], function () {
 
     return {
-        name: "level 3",
+        name:"level 4",
         targets: [
             {
                 type: "ball",
                 options: {
-                    radius: 30
+                    radius: 40
                 },
                 count: 5
             }
         ],
         explosions: 3,
-        goal: 1
+        goal: 0
     };
 });
