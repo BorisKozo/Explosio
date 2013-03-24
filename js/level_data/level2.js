@@ -6,19 +6,12 @@
             {
                 type: "ball",
                 options: {
-                    radius: 15
+                    radius: 30
                 },
-                count: 5
-            },
-            {
-                type: "ball",
-                options: {
-                    radius: 25
-                },
-                count: 7
+                count: 2
             }
         ],
-        explosions: 2,
-        goal: 8
+        explosions: 3,
+        goal: 0
     };
 });

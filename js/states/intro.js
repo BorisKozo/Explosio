@@ -1,11 +1,12 @@
 ﻿define(["require", "jquery", "jaws", "js/level_swapper", "./../common/storyboard", "./../common/sprite_list",
-        "./../common/shapes", "./../sprites/pointer", "./../sprites/ball", "./../sprites/explosion",
+        "./../common/shapes", "./../common/math", "./../sprites/pointer", "./../sprites/ball", "./../sprites/explosion",
         "./../tusk/drawing", "./../tusk/text", "./../tusk/rect"], function (require, $, jaws) {
             var SpriteList = require("./../common/sprite_list");
             var Pointer = require("./../sprites/pointer");
             var shapes = require("./../common/shapes");
             var Storyboard = require("./../common/storyboard");
             var Explosion = require("./../sprites/explosion");
+            var math = require("./../common/math");
 
             var Drawing = require("./../tusk/drawing")
             var Text = require("./../tusk/text");
@@ -61,48 +62,24 @@
                 this.animation = new SpriteList();
                 this.animation.add(explosionsAnimation);
 
-                explosionsAnimation.add(new Explosion({
-                    x: 120,
-                    y: 200,
-                    startRadius: 1,
-                    endRadius: 60,
-                    steps: 45
-                }), 30);
-
-                explosionsAnimation.add(new Explosion({
-                    x: 250,
-                    y: 360,
-                    startRadius: 1,
-                    endRadius: 60,
-                    steps: 45
-                }), 50);
-
-                explosionsAnimation.add(new Explosion({
-                    x: 370,
-                    y: 200,
-                    startRadius: 1,
-                    endRadius: 60,
-                    steps: 45
-                }), 70);
-
-                explosionsAnimation.add(new Explosion({
-                    x: 480,
-                    y: 300,
-                    startRadius: 1,
-                    endRadius: 60,
-                    steps: 45
-                }), 90);
-
-
+                
+                for (var i = 0; i < 30; i++) {
+                    explosionsAnimation.add(new Explosion({
+                        x: math.randomInRange(this.field.left(),this.field.right()),
+                        y: math.randomInRange(this.field.top(), this.field.bottom()),
+                        startRadius: 1,
+                        endRadius: 60,
+                        steps: 45
+                    }), math.randomInRange(i*10,(i+1)*10));
+                }
             };
 
             Intro.prototype.draw = function () {
                 fps.html(jaws.game_loop.fps);
                 jaws.clear();
 
-                this.drawing.draw(jaws.context);
                 this.animation.draw(jaws.context);
-
+                this.drawing.draw(jaws.context);
                 this.pointer.draw(jaws.context);
 
             };

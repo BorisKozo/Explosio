@@ -1,8 +1,31 @@
-﻿define(["require", "jaws", "./state_options", "./level_data/level1", "./level_data/level2", "./level_data/level3"], function (require, jaws, stateOptions) {
+﻿define(["require", "jaws", "./state_options", "./level_data/level1", "./level_data/level2", "./level_data/level3",
+        "./level_data/level4", "./level_data/level5", "./level_data/level6",
+        "./level_data/level7", "./level_data/level8", "./level_data/level9",
+        "./level_data/level10", "./level_data/level11", "./level_data/level12",
+        "./level_data/level13", "./level_data/level14", "./level_data/level15",
+        "./level_data/level16", "./level_data/level17", "./level_data/level18",
+        "./level_data/level19", "./level_data/level20"], function (require, jaws, stateOptions) {
     var levels = [];
     levels.push(require("./level_data/level1"));
     levels.push(require("./level_data/level2"));
     levels.push(require("./level_data/level3"));
+    levels.push(require("./level_data/level4"));
+    levels.push(require("./level_data/level5"));
+    levels.push(require("./level_data/level6"));
+    levels.push(require("./level_data/level7"));
+    levels.push(require("./level_data/level8"));
+    levels.push(require("./level_data/level9"));
+    levels.push(require("./level_data/level10"));
+    levels.push(require("./level_data/level11"));
+    levels.push(require("./level_data/level12"));
+    //levels.push(require("./level_data/level13"));
+    //levels.push(require("./level_data/level14"));
+    //levels.push(require("./level_data/level15"));
+    //levels.push(require("./level_data/level16"));
+    //levels.push(require("./level_data/level17"));
+    //levels.push(require("./level_data/level18"));
+    //levels.push(require("./level_data/level19"));
+    //levels.push(require("./level_data/level20"));
 
     function _getLevelData(levelId) {
         var i, length = swapper.levels.length;
