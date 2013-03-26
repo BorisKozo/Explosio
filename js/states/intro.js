@@ -14,8 +14,6 @@
 
             var Ball = require("./../sprites/ball");
 
-            var fps = $("#fps");
-
             var Intro = function () {
 
             };
@@ -75,7 +73,6 @@
             };
 
             Intro.prototype.draw = function () {
-                fps.html(jaws.game_loop.fps);
                 jaws.clear();
 
                 this.animation.draw(jaws.context);

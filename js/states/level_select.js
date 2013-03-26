@@ -12,8 +12,6 @@
 
     var Level = require("./level");
 
-    var fps = $("#fps");
-
     var LevelSelect = function () {
 
     };
@@ -79,7 +77,6 @@
     };
 
     LevelSelect.prototype.draw = function () {
-        fps.html(jaws.game_loop.fps);
         jaws.clear();
 
         this.drawing.draw(jaws.context);

@@ -19,7 +19,6 @@
         var shapes = require("./../common/shapes");
 
 
-        var fps = $("#fps");
         function generateTargets(field, targets) {
             var i, j, length = targets.length, targetData, target, options, Target, randomNumber,
                 result = new SpriteList(), count;
@@ -310,7 +309,6 @@
         };
 
         Level.prototype.draw = function () {
-            fps.html(jaws.game_loop.fps);
             jaws.clear();
             this.drawing.draw(jaws.context);
             this.targets.draw(jaws.context);
