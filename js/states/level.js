@@ -182,7 +182,8 @@
                 y: 100,
                 height: 120,
                 text: "Level complete",
-                align: "center"
+                align: "center",
+                borderColor:"green"
             }, jaws.context, wonDialogButtons, level.field);
         };
 
@@ -213,7 +214,8 @@
                 y: 100,
                 height: 120,
                 text: "Level failed",
-                align: "center"
+                align: "center",
+                borderColor: "red"
             }, jaws.context, lostDialogButtons, level.field);
         };
 
@@ -285,7 +287,7 @@
             this.gameState = this.getGameState();
             this.pointer.update(this.field);
 
-            this.drawing.getById("targets label").text = this.targets.length + "/" + this.levelData.goal + " targets";
+            this.drawing.getById("targets label").text = (Math.max(0, this.targets.length - this.levelData.goal)).toString() + " blobs to blow";
             this.drawing.getById("explosions label").text = this.explosionsLeft + " explosions";
 
             if (this.gameState === "win") {

@@ -6,6 +6,7 @@
         this.y = options.y || this.y;
         this.align = options.align;
         this.height = options.height || 120;
+        this.borderColor = options.borderColor || "Cornsilk";
         this.buttons = buttons;
 
         this.setText(options.text || "", context, field);
@@ -57,7 +58,8 @@
             height: this.height,
             width: this.width,
             radius: 4,
-            strokeStyle: "Cornsilk",
+            lineWidth: 3,
+            strokeStyle: this.borderColor,
             fillStyle: "rgba(220,220,255,0.9)"
         }), "border");
 
