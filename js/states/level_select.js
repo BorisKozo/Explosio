@@ -32,7 +32,7 @@
         this.drawing.add(new Text({
             x:40,
             y:10,
-            text: "Select Level",
+            text: "Select level",
             fillStyle: "Cornsilk",
             font: "54px Arial"
         }), "title");
